@@ -35,6 +35,8 @@ updated_word <- ""
 # Initialize an empty string for the guess variable
 guess <- ""
 
+# Print a welcome message for the user before the loop begins
+cat("Welcome to Hangman: Vegetable Edition!\n")
 # Create a while loop to prompt user to enter a letter until the game is over
 while (guesses_left > 0 && 
        # loop only runs if the user has guesses left
@@ -43,10 +45,10 @@ while (guesses_left > 0 &&
        (!(guess %in% word)) &&
        # loop only runs if the user has not guessed all of the correct letters
        (!(updated_word %in% word))) { 
-  #loop only runs if the user has not guessed the word
+      # loop only runs if the user has not guessed the word
   # create a prompt to get user to answer a letter and convert the user input to lowercase. 
   # Alternatively, allow the user to guess the entire word
-  answer <- tolower(readline(prompt = "Welcome to Hangman (Vegetable Edition). Please enter a letter or type 'guess' to guess the word: "))
+  answer <- tolower(readline(prompt = "Please enter a letter or type 'guess' to guess the word: "))
   # check if user input is a letter
   if (grepl("^[a-zA-Z]$", answer)) {
     # check if letter has already been guessed and inform the user
@@ -82,10 +84,8 @@ while (guesses_left > 0 &&
         incorrect_letters <- c(incorrect_letters, answer)
         # Inform the user of how many guesses they have remaining
         print(paste(answer, "is not in the word! Remaining attempts:", guesses_left))
-        # If there are incorrect guesses, inform the user of the contents of this vector
-        if (length(incorrect_letters) > 0) {
-          print(paste("Incorrect guesses:", paste(incorrect_letters, collapse = ", ")))
-        }
+        # Inform the user of the their incorrect guesses
+        print(paste("Incorrect guesses:", paste(incorrect_letters, collapse = ", ")))
         # If the user has no guesses left, the game ends
         if (guesses_left == 0) {
           game_over <- TRUE
@@ -108,12 +108,22 @@ while (guesses_left > 0 &&
       # If the guess is correct, inform the user they have won
       if (guess %in% word) {
         print(paste("Congratulations! You won! The word is",word,"!"))
-        # If the guess is incorrect, end the game
+        # If the guess is incorrect, subtract a guess for remaining guesses
       } else {
-        game_over <- TRUE
+        guesses_left <- guesses_left - 1
+        # Update the incorrect letters vector to include the guessed word
+        incorrect_letters <- c(incorrect_letters, guess)
+        # Inform the user of how many guesses they have remaining
+        print(paste(answer, "is not in the word! Remaining attempts:", guesses_left))
+        # Inform the user of the their incorrect guesses
+        print(paste("Incorrect guesses:", paste(incorrect_letters, collapse = ", ")))
+        # If the user has no guesses left, the game ends
+        if (guesses_left == 0) {
+          game_over <- TRUE
+        }
+        # If the game ends, inform the user of the correct word
         if (game_over == TRUE) {
-          # Inform the user that they have guessed incorrectly and tell them the correct word
-          print(paste("That is incorrect! The correct word was",word,". Game over"))
+          print(paste("Game over. The word was",word, ". Better luck next time!"))
         }
       }
     } else {
